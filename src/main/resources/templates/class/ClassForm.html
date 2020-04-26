@@ -24,7 +24,7 @@
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                         <div class="form-group">
-                            <label for="name" class="ml-1">Nome:</label>
+                            <label for="name" class="ml-1">Nome*:</label>
                             <input type="hidden" th:field="*{id}" id="id">
                             <div class="col-12 p-0">
                                 <input type="text" th:field="*{name}" id="name" placeholder="Nome" class="form-control">
@@ -35,7 +35,6 @@
                             <label for="description" class="ml-1">Descrição:</label>
                             <div class="col-12 p-0">
                                 <textarea th:field="*{description}" id="description" placeholder="Descrição" rows="3" class="form-control"></textarea>
-                                <span th:if="${#fields.hasErrors('description')}" class="text-danger" th:errors="*{description}"></span>
                             </div>
                         </div>
                     </div>

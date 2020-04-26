@@ -1,11 +1,9 @@
 package com.conquer.desafio.controller;
 
 import com.conquer.desafio.model.Class;
-import com.conquer.desafio.model.Student;
 import com.conquer.desafio.service.ClassService;
 import com.conquer.desafio.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -66,8 +64,9 @@ public class ClassController {
     }
 
     @PostMapping("/save")
-    public String saveClass(@Valid Class classModel, BindingResult result, Model model){
+    public String saveClass(@Valid @ModelAttribute("classModel") Class classModel, BindingResult result, Model model){
         if(result.hasErrors()){
+            model.addAttribute("classModel", classModel);
             return "class/ClassForm";
         }
 

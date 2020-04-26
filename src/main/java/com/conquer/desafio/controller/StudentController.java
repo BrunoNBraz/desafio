@@ -1,6 +1,5 @@
 package com.conquer.desafio.controller;
 
-import com.conquer.desafio.model.Class;
 import com.conquer.desafio.model.Student;
 import com.conquer.desafio.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +40,7 @@ public class StudentController {
     @PostMapping("/save")
     public String saveStudent(@Valid Student student, BindingResult result, Model model){
         if(result.hasErrors()){
+            model.addAttribute("student", student);
             return "student/StudentForm";
         }
 
