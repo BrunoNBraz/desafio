@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista - Alunos</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="pl-1">
+        <div class="col-12" th:if="${deleteSuccess != null || updateSuccess != null || insertSuccess != null}">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <span th:if="${deleteSuccess}">Aluno excluído com sucesso</span>
+                <span th:if="${updateSuccess}">Aluno editado com sucesso</span>
+                <span th:if="${insertSuccess}">Aluno cadastrado com sucesso</span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+        <div class="col-12">
+            <h2 class="float-left">Alunos</h2>
+            <a class="btn btn-primary float-right" th:href="@{/aluno/cadastrar}">Cadastrar</a>
+        </div>
+        <div class="table-responsive my-1">
+            <table class="table table-striped table-sm">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Editar</th>
+                    <th>Excluir</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="student : ${students}">
+                    <td th:text="${student.id}"></td>
+                    <td th:text="${student.name}"></td>
+                    <td th:text="${student.email}"></td>
+                    <td><a th:href="${'/aluno/editar/' + student.id}"><i class="fas fa-edit"></i></a></td>
+                    <td class="text-center"><a th:href="${'/aluno/excluir/' + student.id}"><i class="fas fa-trash-alt"></i></a></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(students)}">
+                    <td colspan="5" class="text-center">Nenhum registro foi encontrado.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title data-layout-title-pattern="$LAYOUT_TITLE | $CONTENT_TITLE">Conquer</title>
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap-grid.css">
+    <link rel="stylesheet" type="text/css" href="/fontawesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/css/style.css" >
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.0.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.js"></script>
+    <script type="text/javascript" src="/fontawesome/js/all.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.bundle.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/home">Conquer</a>
+</nav>
+
+<div class="container-fluid ">
+    <div class="row my-5">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/home}">
+                            <span data-feather="home"></span>
+                            Dashboard <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/aluno/}">
+                            <span data-feather="home"></span>
+                            Aluno
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/turma/}">
+                            <span data-feather="file"></span>
+                            Turma
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div layout:fragment="content" style="width: 80%;"></div>
+    </div>
+</div>
+
+</body>
+</html>

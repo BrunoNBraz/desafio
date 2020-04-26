@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulário - Turma</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div>
+        <div class="col-12">
+            <h2><span th:text="${classModel.id != null ? 'Editar ' : 'Cadastrar '}"></span>Turma</h2>
+        </div>
+        <div class="col-12">
+            <form action="#" th:action="@{/turma/save}" th:object="${classModel}" method="post" id="form-class">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Dados Gerais</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="alunos-tab" data-toggle="tab" href="#alunos" role="tab" aria-controls="profile" aria-selected="false">Alunos</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="form-group">
+                            <label for="name" class="ml-1">Nome:</label>
+                            <input type="hidden" th:field="*{id}" id="id">
+                            <div class="col-12 p-0">
+                                <input type="text" th:field="*{name}" id="name" placeholder="Nome" class="form-control">
+                                <span th:if="${#fields.hasErrors('name')}" class="text-danger" th:errors="*{name}"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="description" class="ml-1">Descrição:</label>
+                            <div class="col-12 p-0">
+                                <textarea th:field="*{description}" id="description" placeholder="Descrição" rows="3" class="form-control"></textarea>
+                                <span th:if="${#fields.hasErrors('description')}" class="text-danger" th:errors="*{description}"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="alunos" role="tabpanel" aria-labelledby="alunos-tab">
+                        <div class="form-group col-12 m-1">
+                            <label>Aluno:</label>
+                            <div class="flex-wrap display-flex">
+                                <select name="alunos" id="alunosSelect" class="form-control col-lg-9 col-md-9 col-sm-12" th:disabled="${classModel.students != null && #lists.size(classModel.students) == 5 ? true : false}">
+                                    <option value="-1"></option>
+                                    <option th:each="student : ${students}"
+                                            th:value="${student.id}"
+                                            th:text="${student.name}"></option>
+                                </select>
+                                <button type="button" class="btn btn-info ml-1" onclick="addStudent()" th:disabled="${classModel.students != null && #lists.size(classModel.students) == 5 ? true : false}">Adicionar Aluno</button>
+                            </div>
+                        </div>
+                        <h3 class="mt-2">Alunos Matriculados - <span th:text="${classModel.students != null ? #lists.size(classModel.students) : 0}"></span>/5</h3>
+                        <div class="list-students row col-12">
+                            <div class="card col-5 mx-auto p-0 my-2" th:each="student, studentStat : *{students}">
+                                <input type="hidden" th:field="*{students[__${studentStat.index}__].id}">
+                                <div class="card-header">
+                                    <a th:href="@{'/aluno/editar/' + ${classModel.students[__${studentStat.index}__].id}}" th:text="*{students[__${studentStat.index}__].name}"></a>
+                                    <button class="btn btn-sm btn-danger float-right" type="button" th:onclick="'deleteStudent('+ ${studentStat.index} +')'"><i class="fas fa-trash-alt"></i></button>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text" th:text="*{students[__${studentStat.index}__].email}"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 offset-lg-4 mt-1">
+                    <a class="btn btn-danger link-white">Cancelar</a>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        function createJson(){
+            var formData = new FormData(document.getElementById("form-class"));
+            var object = {};
+            var students = [];
+            formData.forEach(function(value, key){
+                if(key.includes("student") && key.includes("id")){
+                    students.push({'id' : value});
+                }
+                else{
+                    object[key] = value;
+                }
+            });
+            object['students'] = students;
+            return JSON.stringify(object);
+        }
+
+        function deleteStudent(rowRemove){
+            var json = createJson();
+            if(rowRemove != null){
+                $.ajax({
+                    data: json,
+                    processData: false,
+                    method: 'POST',
+                    contentType: "application/json; charset=utf-8",
+                    url: '/turma/removestudent?rowRemove=' + rowRemove,
+                    success: function (data) {
+                        var htmlDoc = document.createElement('html');
+                        htmlDoc.innerHTML = data;
+                        $("#alunos").html(htmlDoc.querySelector('#alunos').childNodes);
+                    }
+                });
+            }
+        }
+
+        function addStudent(){
+            var idStudent = $( "#alunosSelect" ).val();
+            var json = createJson();
+            if(idStudent > 0){
+                $.ajax({
+                    data: json,
+                    processData: false,
+                    method: 'POST',
+                    contentType: "application/json; charset=utf-8",
+                    url: '/turma/addstudent?idStudent=' + idStudent,
+                    success: function (data) {
+                        var htmlDoc = document.createElement('html');
+                        htmlDoc.innerHTML = data;
+                        $("#alunos").html(htmlDoc.querySelector('#alunos').childNodes);
+                    }
+                });
+            }
+        }
+    </script>
+</div>
+</body>
+</html>
